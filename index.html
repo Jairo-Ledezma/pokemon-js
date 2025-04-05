@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Project Pokemon</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header >
+      <h1 id="text">This world is inhabited by creatures we call Pokemon.....</h1>
+      <audio src="/map.mp3" id="palet-town"></audio>
+      <audio src="/battle.mp3" id="in-battle"></audio>
+    </header>
+    <main>
+      <div class="map-section">
+        <img src="map.png" alt="a map should appear here" class="map box" />
+      </div>
+      <div class="pokemon hidden">
+        <img src="pokemon-1.png" alt="pokemon" class="pokemonImage" />
+        <h2 class="life-amount">0
+        </h2>
+      </div>
+      <div class="fight-sequence hidden " id="fight">
+        <input type= "image" src= rock.png class="attack-button"></input>
+        <input type="image" src= "pokeball.png" class="catch-button"></input>
+        <input type="image" src= "run.png" class="run-button"></input>
+      </div>
+    </main>
+    <footer >
+      <p id="pokemon-caught">pokemon caught : 0</p>
+    </footer>
+    <script src="script.js"></script>
+  </body>
+</html>
