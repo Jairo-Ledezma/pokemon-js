@@ -33,6 +33,7 @@ const mapMusic = document.getElementById('palet-town');
 const battleMusic = document.getElementById('in-battle');
 let lifeText = document.querySelector('.life-amount');
 let pokemonCaughtCountEl = document.getElementById('pokemon-caught');
+const startGameButton = document.getElementById('start-game-button');
 
 //Variables
 let pokemonCaught = 0;
@@ -67,6 +68,52 @@ let fighting = false;
 let pokemonLife = 0;
 let pokemonNumber = 0;
 
+//functions
+//overlay function
+
+const overlayOn = function (overlayText, image) {
+  fighting = true;
+  battleMusic.pause();
+  document.getElementById('overlay-text').textContent = overlayText;
+  startGameButton.src = image;
+  document.getElementById('overlay').style.display = 'block';
+};
+
+const overlayOff = function () {
+  fighting = true;
+  document.getElementById('overlay').style.display = 'none';
+};
+
+const pokemonEscaped = function () {
+  fighting = true;
+  mapMusic.pause();
+  battleMusic.play();
+  document.getElementById('overlay').style.display = 'none';
+};
+
+//this method switches to the map scene
+const switchMapScene = function (event) {
+  overlayOff();
+  fighting = false;
+  mapMusic.play();
+  battleMusic.pause();
+  battleMusic.currentTime = 0;
+  document.querySelector('body').style = '';
+  fightScene.classList.add('hidden');
+  map.classList.remove('hidden');
+  pokemon.classList.add('hidden');
+  pokemon.classList.remove('flex');
+  text.textContent =
+    'This world is inhabited by creatures we call Pokemon.....';
+};
+
+const startGame = function (text, image) {
+  fighting = true;
+  overlayOn(text, image);
+  startGameButton.addEventListener('click', switchMapScene);
+};
+
+startGame('Tap on the pokeball to start the game', 'pokeball.png');
 // this method switches to the fight scene
 const switchfightScene = function () {
   fighting = true;
@@ -91,21 +138,6 @@ const switchfightScene = function () {
   }'s HP : ${pokemonLife}`;
 };
 
-//this method switches to the map scene
-const switchMapScene = function (event) {
-  fighting = false;
-  mapMusic.play();
-  battleMusic.pause();
-  battleMusic.currentTime = 0;
-  document.querySelector('body').style = '';
-  fightScene.classList.add('hidden');
-  map.classList.remove('hidden');
-  pokemon.classList.add('hidden');
-  pokemon.classList.remove('flex');
-  text.textContent =
-    'This world is inhabited by creatures we call Pokemon.....';
-};
-
 //this method generates a radom number and deducts it from the
 //pokemon's life if the pokemon's life run to 0
 //the user gets redirected to the map
@@ -120,8 +152,11 @@ const attack = function () {
       pokemonNames[pokemonNumber - 1]
     }'s HP : ${pokemonLife}`;
   } else if (pokemonLife - damage <= 0) {
-    alert('The pokemon fled');
-    switchMapScene();
+    overlayOn(
+      'The pokemon fainted and cant be caught ,click the pokeball to continue',
+      'pokeball.png'
+    );
+    startGameButton.addEventListener('click', switchMapScene);
   }
 };
 
@@ -129,7 +164,6 @@ const attack = function () {
 //pokemon should appear or not
 const isThereAFight = function (event) {
   if (fighting == false) {
-    mapMusic.play();
     const pokemonChance = Math.trunc(Math.random() * 5) + 1;
     console.log(pokemonChance);
     let x = event.pageX;
@@ -159,14 +193,21 @@ const isThereAFight = function (event) {
 const catchPokemon = function () {
   const chance = Math.trunc(Math.random() * 2) + 1;
   if (chance == 1 && pokemonLife < 40) {
-    alert('You caught the pokemon');
+    overlayOn(
+      'You caught the pokemon!!, click on the pokeball to continue',
+      'pokeball.png'
+    );
+    startGameButton.addEventListener('click', switchMapScene);
     pokemonCaught++;
     pokemonCaughtCountEl.textContent = String(
       `pokemon caught: ${pokemonCaught}`
     );
-    switchMapScene();
   } else {
-    alert('The pokemon escaped!');
+    overlayOn(
+      'The pokemon escaped, click the pokeball to continue!',
+      'open-pokeball.jpg'
+    );
+    startGameButton.addEventListener('click', overlayOff);
   }
 };
 
@@ -174,9 +215,12 @@ const catchPokemon = function () {
 const run = function () {
   const chance = Math.trunc(Math.random() * 4) + 1;
   if (chance > 2) {
-    alert('you escaped');
-    switchMapScene();
-  } else alert(`you couldn't escape`);
+    overlayOn('you escaped!', 'run.png');
+    startGameButton.addEventListener('click', switchMapScene);
+  } else {
+    overlayOn(`you couldn't escape`, 'no-escape.JPG');
+    startGameButton.addEventListener('click', overlayOff);
+  }
 };
 
 //event listeners for the buttons
