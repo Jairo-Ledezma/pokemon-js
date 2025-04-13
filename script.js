@@ -34,6 +34,7 @@ const battleMusic = document.getElementById('in-battle');
 let lifeText = document.querySelector('.life-amount');
 let pokemonCaughtCountEl = document.getElementById('pokemon-caught');
 const startGameButton = document.getElementById('start-game-button');
+const overlay = document.getElementById('overlay');
 
 //Variables
 let pokemonCaught = 0;
@@ -75,24 +76,17 @@ const overlayOn = function (overlayText, image) {
   fighting = true;
   battleMusic.pause();
   document.getElementById('overlay-text').textContent = overlayText;
+  overlay.classList.remove('overlay-hidden');
   startGameButton.src = image;
-  document.getElementById('overlay').style.display = 'block';
 };
 
-const overlayOff = function () {
+function overlayOff() {
   fighting = true;
-  document.getElementById('overlay').style.display = 'none';
-};
-
-const pokemonEscaped = function () {
-  fighting = true;
-  mapMusic.pause();
-  battleMusic.play();
-  document.getElementById('overlay').style.display = 'none';
-};
+  overlay.classList.add('overlay-hidden');
+}
 
 //this method switches to the map scene
-const switchMapScene = function (event) {
+const switchMapScene = function () {
   overlayOff();
   fighting = false;
   mapMusic.play();
@@ -207,7 +201,7 @@ const catchPokemon = function () {
       'The pokemon escaped, click the pokeball to continue!',
       'open-pokeball.jpg'
     );
-    startGameButton.addEventListener('click', overlayOff);
+    startGameButton.addEventListener('click', overlayOff); // work here
   }
 };
 
@@ -219,7 +213,7 @@ const run = function () {
     startGameButton.addEventListener('click', switchMapScene);
   } else {
     overlayOn(`you couldn't escape`, 'no-escape.JPG');
-    startGameButton.addEventListener('click', overlayOff);
+    startGameButton.addEventListener('click', overlayOff); // work here
   }
 };
 
